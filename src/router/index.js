@@ -9,6 +9,14 @@ import UsersView from "../views/Auth";
 import RegisterUsers from "../components/auth/register";
 import LoginUsers from "../components/auth/login";
 
+
+import ArticlesView from '../views/Article' 
+
+import Index_Article from '../components/articles/index'
+import New_Article from '../components/articles/new'
+import Edit_Article from '../components/articles/edit'
+import Show_Article from '../components/articles/show'
+
 Vue.use(VueRouter)
 
   const routes = [
@@ -39,6 +47,47 @@ Vue.use(VueRouter)
         name: name_routes.users.register.name,
         meta: {
           title: name_routes.users.register.title
+        }
+      }
+    ]
+  },
+  {
+    path: name_routes.articles.path,
+    component: ArticlesView,
+    meta: {
+      title: name_routes.articles.title
+    },
+    children: [
+      {
+        path: name_routes.articles.new.path,
+        component: New_Article,
+        name: name_routes.articles.new.name,
+        meta: {
+          title: name_routes.articles.new.title
+        }
+      },
+      {
+        path: name_routes.articles.edit.path,
+        component: Edit_Article,
+        name: name_routes.articles.edit.name,
+        meta: {
+          title: name_routes.articles.edit.title
+        }
+      },
+      {
+        path: name_routes.articles.index.path,
+        component: Index_Article,
+        name: name_routes.articles.index.name,
+        meta: {
+          title: name_routes.articles.index.title
+        }
+      },
+      {
+        path: name_routes.articles.show.path,
+        component: Show_Article,
+        name: name_routes.articles.show.name,
+        meta: {
+          title: name_routes.articles.show.title
         }
       }
     ]

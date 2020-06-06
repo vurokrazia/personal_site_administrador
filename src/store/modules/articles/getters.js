@@ -4,12 +4,12 @@ export function start(state) {
 export function id(state) {
   return state.id
 }
-export function edit_experience(state) {
-  return state.edit_experience
+export function articles(state) {
+  return state.articles
 }
-export function experiences(state) {
-  return state.experiences
+export function article(state) {
+  return state.article
 }
-export function experience(state) {
-  return state.experience
+export function article_body_index(state){
+  return state.validate_article_body.index
 }

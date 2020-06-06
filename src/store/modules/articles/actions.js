@@ -1,9 +1,12 @@
 import api from "../../../plugins/axios";
 export async function createArticle({ commit }, resource) {
-  return api().post("articles", resource);
+  return api(true).post("articles", resource);
 }
 export async function updateArticle({ commit }, resource) {
-  return api().put("articles/" + resource.experience.id, resource);
+  return api(true).put(`articles/${resource.id}` , resource);
+}
+export async function getArticle({ commit }, resource) {
+  return api().get(`articles/${resource.id}`);
 }
 export async function getArticles(commit, data) {
   let url = `articles`;

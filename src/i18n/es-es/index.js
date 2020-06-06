@@ -17,6 +17,7 @@ export default {
   inputs: {
     create_continue: "Crear otro registro",
     name: "Nombre",
+    body: "Cuerpo",
     last_name: "Apellidos",
     email: "Correo",
     password_confirm: "Confirmar contraseña",

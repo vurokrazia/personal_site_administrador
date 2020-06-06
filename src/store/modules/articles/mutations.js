@@ -2,30 +2,35 @@ import { uniqBy, findIndex, remove } from "lodash";
 export function setStart(state, start) {
   state.start = start;
 }
-export function setExperience(state, experience) {
-  state.experience = experience;
+export function setArticle(state, article) {
+  state.article = article;
 }
-export function setEditExperience(state, experience) {
-  state.edit_experience = experience;
-}
-export function setExperiences(state, data) {
+export function setArticles(state, data) {
   if (state.start === 1) {
-    state.experiences = data;
+    state.articles = data;
   } else {
-    let experiences = state.experiences.concat(data);
-    state.experiences = uniqBy(experiences, function(n) {
+    let articles = state.articles.concat(data);
+    state.articles = uniqBy(articles, function(n) {
       return n.id;
     });
   }
 }
-export function setUpdateExperiences(state, data) {
-  var index = findIndex(state.experiences, {
+export function setUpdateArticle(state, data) {
+  var index = findIndex(state.articles, {
     id: data.id
   });
-  state.experiences.splice(index, 1, data);
+  state.articles.splice(index, 1, data);
 }
-export function removeExperience(state, item) {
-  state.experiences = remove(state.experiences, function(n) {
+export function removeArticle(state, item) {
+  state.articles = remove(state.articles, function(n) {
     return n.id != item.id;
   });
+}
+export function setValidateArticleBody(state,item){
+  if(item.index == -1)
+    state.validate_article_body.objects  = []
+  state.validate_article_body.next = item.next
+  if(!(JSON.stringify(item.object) === JSON.stringify({})))
+    state.validate_article_body.objects.push(item.object)
+    state.validate_article_body.index = item.index + 1
 }

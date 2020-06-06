@@ -212,12 +212,7 @@ export default {
     },
     checkNameRoute(root) {
       var item = root.to;
-      if (item.name != this.$route.name) {
-        if (root.reset) {
-          this.setSkillId(null);
-        }
-        this.$router.push(item).catch(err => {});
-      }
+      this.$router.push(item).catch(err => {});
     },
     showItem(item, key) {
       var to = this.$t(`path.${key}.show.name`);

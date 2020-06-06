@@ -17,6 +17,27 @@ export default {
     },
     findProfilePerson(){
 
-    }
+    },
+    displayErrorMessage(error) {
+      if (error && error.data) this.setMessage({
+        color: "error",
+        timeout: 3000,
+        snackbar: "0123456789",
+        text: error.data.message,
+        confirm: false
+      });
+      else console.log(error.data);
+    },
+    displayMessage(message, color) {
+      alert(message)
+      return
+      this.setMessage({
+        color: color,
+        timeout: 3000,
+        snackbar: "0123456789",
+        text: message,
+        confirm: false
+      });
+    },
   }
 };
