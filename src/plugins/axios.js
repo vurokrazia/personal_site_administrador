@@ -4,7 +4,7 @@ export default (multipart = false) => {
   console.log(multipart);
   return axios.create(
     {
-      baseURL: process.env.NODE_ENV == 'production' ? 'http://codigovurokrazia.com:3000/api/v1/' : 'http://localhost:3000/api/v1/',
+      baseURL: process.env.NODE_ENV == 'production' ? 'https://www.backend.vurokrazia.com/api/v1/' : 'http://localhost:3000/api/v1/',
       withCredentials: false,
       headers: get_headers(multipart)
     }
