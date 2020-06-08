@@ -1,7 +1,8 @@
 <template>
   <div>
-    <v-card-text>
-      <v-form>
+    <vue-markdown :style="display_markdown ? 'display:block' : 'display:none'" :source="convert_resource()"/>
+    <v-card-text >
+      <v-form :style="display_markdown ? 'display:none' : 'display:block'">
         <v-text-field
           class="capitalize"
           v-model="resource.title"
@@ -21,19 +22,17 @@
           @input="$v.resource.body.$touch()"
           @blur="$v.resource.body.$touch()"
         />
-        <div v-for="(object,index) in [1,2,3,4]" :key="index">
-          
-        </div>
-        <v-btn text small color="primary" @click="add_body">plus</v-btn>
       </v-form>
     </v-card-text>
-    <v-card-actions>
-      <v-spacer />
-      <v-btn @click="sendElement" class="mx-5">{{ $t("buttons.send") }}</v-btn>
+    <v-card-actions class="d-flex flex-row-reverse">
+      <v-btn text small color="primary" @click="sendElement" class="mx-5">{{ $t("buttons.send") }}</v-btn>
+      <v-btn text small color="secondary" @click="add_body">plus</v-btn>
+      <v-btn text small color="secondary" @click="display_markdown = !display_markdown">------------</v-btn>
     </v-card-actions>
   </div>
 </template>
 <script>
+import VueMarkdown from 'vue-markdown'
 import { validationMixin } from "vuelidate";
 import {
   required,
@@ -48,6 +47,9 @@ export default {
   props: {
     element: Object
   },
+    components: {
+    VueMarkdown
+  },
   mixins: [validationMixin],
   validations: {
     resource: {
@@ -55,7 +57,7 @@ export default {
       body: {
         required,
         minLength: minLength(5),
-        maxLength: maxLength(255)
+        // maxLength: maxLength(255)
       }
     }
   },
@@ -66,7 +68,7 @@ export default {
   },
   data() {
     return {
-      create_continue: false,
+      display_markdown: false,      
       resource: {
         title: null,
         body: null
@@ -74,6 +76,9 @@ export default {
     };
   },
   methods: {
+    changeMarkDown(){
+      
+    },
     add_body(){
       this.$emit("add-body");
     },
@@ -88,13 +93,14 @@ export default {
       }
       return data_form
     },
+    convert_resource(){
+       //return {source:this.resource}
+       return this.resource.body ? this.resource.body : ""
+  },
     sendElement() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
-        this.$emit("send-resource", {
-          article: this.form_data_article(),
-          continue: this.create_continue
-        });
+        this.$emit("send-resource", this.resource);
       }
     }
   },
@@ -140,13 +146,13 @@ export default {
             length: 5
           })
         );
-      !this.$v.resource.body.maxLength &&
-        errors.push(
-          this.$t("validations.maxLength", {
-            field: this.$t("inputs.body").toLowerCase(),
-            length: 255
-          })
-        );
+      // !this.$v.resource.body.maxLength &&
+      //   errors.push(
+      //     this.$t("validations.maxLength", {
+      //       field: this.$t("inputs.body").toLowerCase(),
+      //       length: 255
+      //     })
+      //   );
       return errors;
     }
   }

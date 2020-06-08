@@ -13,8 +13,22 @@
         <formulario @send-resource="init_validate_article_bodies" @add-body="merge_body" />
       </v-card>
     </v-col>
-    <v-col xs="12" sm="6" offset-md="1" md="10" lg="8" offset-lg="2" v-for="(body,index) in article_bodies" :key="index">
-      <form-article-body @remove-body="destroy_body" @add-body="merge_body" :index="index" :validate-index="validate_index"/>
+    <v-col
+      xs="12"
+      sm="6"
+      offset-md="1"
+      md="10"
+      lg="8"
+      offset-lg="2"
+      v-for="(body,index) in article_bodies"
+      :key="index"
+    >
+      <form-article-body
+        @remove-body="destroy_body"
+        @add-body="merge_body"
+        :index="index"
+        :validate_index="validate_index"
+      />
     </v-col>
   </v-row>
 </template>
@@ -34,21 +48,28 @@ export default {
     return {
       loading: false,
       article_bodies: [],
-      resource_create:{},
+      resource_create: {},
       validate_index: {
         index: -1,
         next: true,
-        object:{}
-      },
+        object: {}
+      }
     };
   },
   watch: {
-    article_body_index(){
-      console.log("new",this.article_body_index,this.article_bodies.length);
+    create_article() {
+      var _this = this;
+      if (this.create_article)
+        setTimeout(() => {
+          _this.registerResource();
+        }, 2000);
+    },
+    validate_article_body() {
+      console.log("new", this.validate_article_body);
     }
   },
   methods: {
-    ...mapMutations('articleModule',['setValidateArticleBody']),
+    ...mapMutations("articleModule", ["setValidateArticleBody"]),
     ...mapActions("articleModule", ["createArticle"]),
     ...mapMutations("articleModule", ["setArticle"]),
     get_last_index() {
@@ -67,27 +88,44 @@ export default {
         return body.key !== obj.index;
       });
     },
-    init_validate_article_bodies(data){
-      this.resource_create = data
-      if(this.article_bodies.length == 0){
-        this.registerResource()
+    init_validate_article_bodies(data) {
+      this.setArticle({});
+      this.setArticle(data.article);
+      if (this.article_bodies.length == 0) {
+        this.registerResource();
       } else {
-        this.validation_article_bodies(this.validate_index);
+        this.setValidateArticleBody({
+          article_bodies_length: this.article_bodies.length,
+          validate_article_body: true
+        });
       }
     },
-    validation_article_bodies(obj) {
-      this.setValidateArticleBody(obj)
-    },  
+    get_ggg() {
+      let data_form = new FormData();
+      for (var key in this.article) {
+        console.log("key",key.includes("_attributes"));
+        if (key.includes("_attributes")) {
+          this.article[key].forEach(element => {
+            data_form.append(`article[${key}]`, JSON.stringify(element));
+            console.log(`article[${key}][]`);
+          });
+        } else 
+          data_form.append(`article[${key}]`, this.article[key]);
+        console.log(`article[${key}]`, this.article[key]);
+      }
+      return data_form;
+    },
     registerResource() {
       this.loading = true;
-      this.createArticle(this.resource_create.article)
+      //this.get_ggg()
+      //return
+      this.createArticle(this.article)
         .then(response => {
           let json = response.data;
           this.setArticle(json);
           this.displayMessage(this.$t("messages.register_success"), "success");
           this.loading = false;
-          if (!data.continue)
-            this.$router.push({ name: this.$t("path.articles.index.name") });
+          this.$router.push({ name: this.$t("path.articles.show.name") });
         })
         .catch(err => {
           this.displayErrorMessage(err.response);
@@ -96,7 +134,12 @@ export default {
     }
   },
   computed: {
-    ...mapGetters('articleModule',['article_body_index']),
+    ...mapGetters("articleModule", [
+      "article_body_index",
+      "create_article",
+      "form_data_article",
+      "article"
+    ])
   }
 };
 </script>

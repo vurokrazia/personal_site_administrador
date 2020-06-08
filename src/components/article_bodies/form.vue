@@ -61,7 +61,7 @@ export default {
       body: {
         required,
         minLength: minLength(5),
-        maxLength: maxLength(255)
+        // maxLength: maxLength(255)
       }
     }
   },
@@ -80,7 +80,7 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("articleModule", ["setValidateArticleBody"]),
+    ...mapMutations("articleModule", ["setArticleBody",'setCancelValidate']),
     add_body() {
       this.$emit("add-body");
     },
@@ -100,23 +100,19 @@ export default {
     },
     sendElement() {
       this.$v.$touch();
-      if (!this.$v.$invalid) {
-        console.log("sendElement",this.validate_index);
-        this.validate_index.object = this.resource;
-        this.setValidateArticleBody(this.validate_index);
-      } 
+      this.setArticleBody({
+          correct:!this.$v.$invalid,
+          resource:this.resource
+        });
     }
   },
   watch: {
-    article_body_index() {
-      console.log(this.article_body_index, this.index);
-      if (this.article_body_index == this.index) {
-        this.sendElement()
-      }
+    validate_article_body() {
+      if (this.validate_article_body) this.sendElement();
     }
   },
   computed: {
-    ...mapGetters("articleModule", ["article_body_index"]),
+    ...mapGetters("articleModule", ["validate_article_body"]),
     titleErrors() {
       const errors = [];
       if (!this.$v.resource.title.$dirty) return errors;
@@ -158,13 +154,13 @@ export default {
             length: 5
           })
         );
-      !this.$v.resource.body.maxLength &&
-        errors.push(
-          this.$t("validations.maxLength", {
-            field: this.$t("inputs.body").toLowerCase(),
-            length: 255
-          })
-        );
+      // !this.$v.resource.body.maxLength &&
+      //   errors.push(
+      //     this.$t("validations.maxLength", {
+      //       field: this.$t("inputs.body").toLowerCase(),
+      //       length: 255
+      //     })
+      //   );
       return errors;
     }
   }
