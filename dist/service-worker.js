@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/precache-manifest.c7002d3ff21c34117d4da65979cd69a6.js"
+  "/precache-manifest.35adc8d02de6a790b4fe8106f8e9c650.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "site_vurokrazia_frontend"});
