@@ -157,6 +157,16 @@ export default {
           title: this.$t("path.home.root.title"),
           to: this.$t("path.home.root.path"),
         },
+        {
+          title: this.$t("path.articles.title"),
+          to: { name: this.$t("path.articles.index.name") },
+          icon: this.$t("path.articles.index.icon"),
+        },
+        {
+          title: this.$t("path.categories.index.title"),
+          to: { name: this.$t("path.categories.index.name") },
+          icon: this.$t("path.categories.index.icon"),
+        },
       ],
       auth_list: [
         {
@@ -183,6 +193,21 @@ export default {
               title: this.$t("path.articles.index.title"),
               to: { name: this.$t("path.articles.index.name") },
               icon: this.$t("path.articles.index.icon"),
+            },
+          ],
+        },
+        {
+          title: this.$t("path.categories.title"),
+          list: [
+            {
+              title: this.$t("path.categories.new.title"),
+              to: { name: this.$t("path.categories.new.name") },
+              icon: this.$t("path.categories.new.icon"),
+            },
+            {
+              title: this.$t("path.categories.index.title"),
+              to: { name: this.$t("path.categories.index.name") },
+              icon: this.$t("path.categories.index.icon"),
             },
           ],
         }

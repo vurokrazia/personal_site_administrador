@@ -1,10 +1,10 @@
 import store from '../store/index';
+import {url}  from './enviroment_vars'
 import axios from 'axios';
 export default (multipart = false) => {
-  console.log(multipart);
   return axios.create(
     {
-      baseURL: process.env.NODE_ENV == 'production' ? 'https://backend.vurokrazia.com/api/v1/' : 'http://localhost:3000/api/v1/',
+      baseURL: url,
       withCredentials: false,
       headers: get_headers(multipart)
     }
@@ -24,9 +24,5 @@ function get_headers(multipart) {
     Accept: 'application/json',
     'Content-Type': 'application/json'
   }
-
-
-
-
   return headers
 }

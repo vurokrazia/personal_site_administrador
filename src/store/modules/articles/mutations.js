@@ -1,12 +1,16 @@
 import { uniqBy, findIndex, remove } from "lodash";
-export function setStart(state, start) {
-  state.start = start;
+export function setPage(state, page) {
+  state.page = page;
 }
 export function setArticle(state, article) {
+  if( article == null)
+    {
+      state.article_bodies = []
+    }
   state.article = {...article};
 }
 export function setArticles(state, data) {
-  if (state.start === 1) {
+  if (state.page === 1) {
     state.articles = data;
   } else {
     let articles = state.articles.concat(data);
@@ -14,6 +18,7 @@ export function setArticles(state, data) {
       return n.id;
     });
   }
+  state.page++
 }
 export function setUpdateArticle(state, data) {
   var index = findIndex(state.articles, {
@@ -30,7 +35,7 @@ export function setCancelValidate(state,item){
   state.validate_article_body = item
 }
 export function setValidateArticleBody(state, item) {
-  console.log("state setValidateArticleBody", item);
+  // console.log("state setValidateArticleBody", item);
   state.article_bodies = []
   state.validate_article_body = item.validate_article_body
   state.article_bodies_length = item.article_bodies_length
@@ -38,9 +43,9 @@ export function setValidateArticleBody(state, item) {
 }
 export function setArticleBody(state, item) {
   state.article_bodies.push(item)
-  console.log("setArticleBody", state.article_bodies.length, state.article_bodies_length, state.article_bodies.length == state.article_bodies_length);
+  // console.log("setArticleBody", state.article_bodies.length, state.article_bodies_length, state.article_bodies.length == state.article_bodies_length);
   if (state.article_bodies.length == state.article_bodies_length) {
-    console.log("a revisar si valido :(");
+    // console.log("a revisar si valido :(");
     let array = []
     state.article_bodies.forEach(item => {
       if (item.correct)
@@ -48,16 +53,16 @@ export function setArticleBody(state, item) {
     });
     if (array.length == state.article_bodies_length) {
       //state.article.article_bodies = array 
-      Object.assign(state.article, { article_bodies_attributes: array });
-      console.log("Success :D",state.article);
+      // Object.assign(state.article, { article_bodies_attributes: array });
+      state.article_bodies = array
       state.create_article = true
       setTimeout(() => {
         state.validate_article_body = false
         state.create_article = false
-      }, 1000);
+      }, 500);
     }
     else {
-      console.log("Errors D:");
+      // console.log("Errors D:");
       state.validate_article_body = false
     }
   }

@@ -36,10 +36,11 @@
 import Formulario from "./form";
 import FormArticleBody from "../article_bodies/form";
 import utils from "../../mixins";
+import options_create from "../../mixins/options_create";
 import { mapActions, mapMutations, mapState, mapGetters } from "vuex";
 export default {
   name: "NewExperience",
-  mixins: [utils],
+  mixins: [utils, options_create],
   components: {
     Formulario,
     FormArticleBody
@@ -58,19 +59,18 @@ export default {
   },
   watch: {
     create_article() {
-      var _this = this;
-      if (this.create_article)
-        setTimeout(() => {
-          _this.registerResource();
-        }, 2000);
+      if (this.create_article) this.registerResource(this.form_data_resource(this.article, "article"));
     },
     validate_article_body() {
       console.log("new", this.validate_article_body);
     }
   },
+  created() {
+    this.setArticle(null);
+  },
   methods: {
     ...mapMutations("articleModule", ["setValidateArticleBody"]),
-    ...mapActions("articleModule", ["createArticle"]),
+    ...mapActions("articleModule", ["createArticle", "updateArticle"]),
     ...mapMutations("articleModule", ["setArticle"]),
     get_last_index() {
       return this.article_bodies.length == 0
@@ -89,55 +89,55 @@ export default {
       });
     },
     init_validate_article_bodies(data) {
-      this.setArticle({});
-      this.setArticle(data.article);
       if (this.article_bodies.length == 0) {
-        this.registerResource();
+        this.registerResource(this.form_data_resource(data, "article"));
       } else {
+        this.setArticle(data);
         this.setValidateArticleBody({
           article_bodies_length: this.article_bodies.length,
           validate_article_body: true
         });
       }
     },
-    get_ggg() {
-      let data_form = new FormData();
-      for (var key in this.article) {
-        console.log("key",key.includes("_attributes"));
-        if (key.includes("_attributes")) {
-          this.article[key].forEach(element => {
-            data_form.append(`article[${key}]`, JSON.stringify(element));
-            console.log(`article[${key}][]`);
-          });
-        } else 
-          data_form.append(`article[${key}]`, this.article[key]);
-        console.log(`article[${key}]`, this.article[key]);
-      }
-      return data_form;
-    },
-    registerResource() {
+    registerResource(resource) {
       this.loading = true;
-      //this.get_ggg()
-      //return
-      this.createArticle(this.article)
+      this.createArticle(resource)
         .then(response => {
-          let json = response.data;
-          this.setArticle(json);
-          this.displayMessage(this.$t("messages.register_success"), "success");
-          this.loading = false;
-          this.$router.push({ name: this.$t("path.articles.show.name") });
+          this.setArticle(response.data);
+          if (
+            this.create_article_bodies.article_bodies_attributes.length != 0
+          ) {
+            this.registerBodies();
+          } else {
+            this.finish_create();
+          }
         })
         .catch(err => {
           this.displayErrorMessage(err.response);
           this.loading = false;
         });
+    },
+    registerBodies() {
+      this.updateArticle(this.create_article_bodies)
+        .then(result => {
+          this.setArticle(result.data);
+          this.finish_create();
+        })
+        .catch(err => {
+          alert(err);
+        });
+    },
+    finish_create() {
+      this.loading = false;
+      this.displayMessage(this.$t("messages.register_success"), "success");
+      this.$router.push({ name: this.$t("path.articles.show.name") });
     }
   },
   computed: {
     ...mapGetters("articleModule", [
       "article_body_index",
       "create_article",
-      "form_data_article",
+      "create_article_bodies",
       "article"
     ])
   }

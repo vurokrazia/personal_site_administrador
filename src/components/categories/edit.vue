@@ -5,12 +5,12 @@
         <v-toolbar color="primary" flat>
           <v-toolbar-title>
             {{
-            $t("path.articles.edit.title")
+            $t("path.categories.edit.title")
             }}
           </v-toolbar-title>
           <v-spacer />
         </v-toolbar>
-        <formulario :element="article" @send-resource="updateResource" />
+        <formulario :element="category" @send-resource="updateResource" />
       </v-card>
     </v-col>
   </v-row>
@@ -21,7 +21,7 @@ import options_create from "../../mixins/options_create";
 // import utils from "../../mixins";
 import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
-  name: "ExperienceEdit",
+  name: "CategoryEdit",
   components: {
     Formulario
   },
@@ -31,26 +31,24 @@ export default {
     };
   },
   mounted() {
-    if (this.empty_article)
-      this.$router.push({ name: this.$t("path.articles.index.name") });
+    if (this.empty_category)
+      this.$router.push({ name: this.$t("path.categories.index.name") });
   },
   mixins: [options_create],
   methods: {
-    ...mapActions("articleModule", ["updateArticle"]),
-    ...mapMutations("articleModule", ["setArticle", "setUpdateArticle"]),
+    ...mapActions("categoryModule", ["updateCategory"]),
+    ...mapMutations("categoryModule", ["setCategory", "setUpdateCategory"]),
     updateResource(json) {
       this.loading = true;
-      this.updateArticle({
-        form: this.form_data_resource(json, "article"),
+      console.log(json.id);
+      this.updateCategory({
+        form: this.form_data_resource(json, "category"),
         id: json.id
       })
         .then(response => {
-          let json = response.data;
-          this.setArticle(json);
-          this.setUpdateArticle(json);
           this.loading = false;
           // this.displayMessage(this.$t("messages.updated_success"), "success");
-          this.$router.push({ name: this.$t("path.articles.show.name") });
+          this.$router.push({ name: this.$t("path.categories.show.name") });
         })
         .catch(err => {
           this.displayErrorMessage(err.response);
@@ -59,7 +57,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("articleModule", ["article","empty_article"])
+    ...mapGetters("categoryModule", ["category", "empty_category"])
   }
 };
 </script>

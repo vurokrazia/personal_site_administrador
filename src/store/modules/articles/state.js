@@ -1,7 +1,7 @@
 export default {
   article: {},
   articles: [],
-  start: 1,
+  page: 1,
   validate_article_body: false,
   article_bodies_length: 0,
   article_bodies: [],

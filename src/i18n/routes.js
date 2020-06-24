@@ -55,4 +55,32 @@ export default {
       name: "articlesShow"
     }
   },
+  categories: {
+    path: "/categories",
+    title: "Categorías",
+    index: {
+      title: "Categorías",
+      icon: "android",
+      path: "index",
+      name: "categoriesIndex"
+    },
+    new: {
+      title: "Registrar Categoria",
+      icon: "android",
+      path: "new",
+      name: "categoriesNew"
+    },
+    edit: {
+      title: "Editar Categoria",
+      icon: "android",
+      path: "edit",
+      name: "categoriesEdit"
+    },
+    show: {
+      title: "Ver Categoria",
+      icon: "android",
+      path: "show",
+      name: "categoriesShow"
+    }
+  },
 };

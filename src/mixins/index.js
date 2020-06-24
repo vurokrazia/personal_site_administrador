@@ -5,6 +5,7 @@ export default {
     return {};
   },
   methods: {
+    ...mapMutations(["setAlertMessage"]),
     ...mapMutations("authModule", ["setUser"]),
     findStorage() {
       if (localStorage.getItem(user_key)) {
@@ -15,11 +16,25 @@ export default {
     logoutStorage() {
       this.setUser(null);
     },
-    findProfilePerson(){
+    copyStringToClipboard(str) {
+      console.log(str);
+    },
+    infiniteScroll(name, accion) {
+      var listElm = document.querySelector(name);
+      console.log("ok",listElm);
+      listElm.addEventListener('scroll', function () {
+        console.log("buscando");
+        if (listElm.scrollTop + listElm.clientHeight >= listElm.scrollHeight) {
+          accion()
+        }
+      });
+      
+    },
+    findProfilePerson() {
 
     },
     displayErrorMessage(error) {
-      if (error && error.data) this.setMessage({
+      if (error && error.data) this.setAlertMessage({
         color: "error",
         timeout: 3000,
         snackbar: "0123456789",
@@ -30,8 +45,7 @@ export default {
     },
     displayMessage(message, color) {
       alert(message)
-      return
-      this.setMessage({
+      this.setAlertMessage({
         color: color,
         timeout: 3000,
         snackbar: "0123456789",

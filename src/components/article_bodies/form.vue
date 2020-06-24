@@ -32,12 +32,13 @@
       </v-form>
     </v-card-text>
     <v-card-text class="d-flex flex-row-reverse">
-      <v-btn text small color="primary" @click="add_body">add</v-btn>
+      <v-btn text small color="primary" @click="evalue_accion">add</v-btn>
       <v-btn text small color="primary" @click="del_body">delete</v-btn>
     </v-card-text>
   </v-card>
 </template>
 <script>
+import { findIndex } from "lodash";
 import { validationMixin } from "vuelidate";
 import {
   required,
@@ -46,7 +47,7 @@ import {
   email,
   between
 } from "vuelidate/lib/validators";
-import { mapGetters, mapState, mapMutations } from "vuex";
+import { mapGetters, mapState, mapMutations, mapActions } from "vuex";
 export default {
   name: "FormArticleBody",
   props: {
@@ -60,7 +61,7 @@ export default {
       title: { required, minLength: minLength(5), maxLength: maxLength(255) },
       body: {
         required,
-        minLength: minLength(5),
+        minLength: minLength(5)
         // maxLength: maxLength(255)
       }
     }
@@ -68,11 +69,12 @@ export default {
   mounted() {
     if (this.element) {
       this.resource = this.element;
+      this.update = true;
     }
   },
   data() {
     return {
-      create_continue: false,
+      update: false,
       resource: {
         title: null,
         body: null
@@ -80,9 +82,33 @@ export default {
     };
   },
   methods: {
-    ...mapMutations("articleModule", ["setArticleBody",'setCancelValidate']),
+    ...mapMutations("articleModule", ["setArticleBody", "setCancelValidate"]),
+    ...mapActions("articleModule",["updateArticleBody"]),
     add_body() {
       this.$emit("add-body");
+    },
+    update_body() {
+      let data = this.resource
+      var article = {...this.article}
+      var index = findIndex(article.article_bodies, {
+        id: data.id
+      });
+      article.article_bodies.splice(index, 1, data);
+      article.article_bodies_attributes = article.article_bodies
+      delete article.article_bodies
+      delete article.banner;
+      let json = {
+        form: {
+          article: article
+        }, 
+        id: article.id
+      }
+      this.updateArticleBody(json)
+      this.$emit("updated-body");
+    },
+    evalue_accion() {
+      if (this.update) this.update_body();
+      else this.add_body();
     },
     del_body() {
       this.$emit("remove-body", { index: this.index });
@@ -101,9 +127,9 @@ export default {
     sendElement() {
       this.$v.$touch();
       this.setArticleBody({
-          correct:!this.$v.$invalid,
-          resource:this.resource
-        });
+        correct: !this.$v.$invalid,
+        resource: this.resource
+      });
     }
   },
   watch: {
@@ -112,7 +138,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("articleModule", ["validate_article_body"]),
+    ...mapGetters("articleModule", ["validate_article_body","article"]),
     titleErrors() {
       const errors = [];
       if (!this.$v.resource.title.$dirty) return errors;

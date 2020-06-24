@@ -11,19 +11,27 @@ import LoginUsers from "../components/auth/login";
 
 
 import ArticlesView from '../views/Article' 
-
 import Index_Article from '../components/articles/index'
 import New_Article from '../components/articles/new'
 import Edit_Article from '../components/articles/edit'
 import Show_Article from '../components/articles/show'
 
-Vue.use(VueRouter)
+import CategoriesView from '../views/Category' 
+import Index_Category from '../components/categories/index'
+import New_Category from '../components/categories/new'
+import Edit_Category from '../components/categories/edit'
+import Show_Category from '../components/categories/show'
 
+Vue.use(VueRouter)
+  
   const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Index_Article,
+    meta: {
+      title: "Welcome"
+    }
   },
   {
     path: name_routes.users.path,
@@ -92,6 +100,47 @@ Vue.use(VueRouter)
       }
     ]
   },
+  {
+    path: name_routes.categories.path,
+    component: CategoriesView,
+    meta: {
+      title: name_routes.categories.title
+    },
+    children: [
+      {
+        path: name_routes.categories.new.path,
+        component: New_Category,
+        name: name_routes.categories.new.name,
+        meta: {
+          title: name_routes.categories.new.title
+        }
+      },
+      {
+        path: name_routes.categories.edit.path,
+        component: Edit_Category,
+        name: name_routes.categories.edit.name,
+        meta: {
+          title: name_routes.categories.edit.title
+        }
+      },
+      {
+        path: name_routes.categories.index.path,
+        component: Index_Category,
+        name: name_routes.categories.index.name,
+        meta: {
+          title: name_routes.categories.index.title
+        }
+      },
+      {
+        path: name_routes.categories.show.path,
+        component: Show_Category,
+        name: name_routes.categories.show.name,
+        meta: {
+          title: name_routes.categories.show.title
+        }
+      }
+    ]
+  },
 ]
 
 const router = new VueRouter({
@@ -109,4 +158,13 @@ const beforeEnter = (to, from, next) => {
     next();
   }
 };
+
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title;
+  if(document.title == name_routes.articles.show.title)
+    document.title = store.getters['articleModule/article'].title
+
+  next();
+});
+
 export default router
