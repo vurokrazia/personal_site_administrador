@@ -1,39 +1,33 @@
 <template>
-  <v-row class="mx-1">
+  <v-row style="padding-top:0px">
     <v-col
       v-for="(article, index) in articles"
       :key="index"
       xs="12"
-      sm="6"
+      sm="10"
+      offset-sm="1"
       md="4"
       lg="6"
       offset-lg="3"
+      class="mb-5"
     >
-      <v-card height="100%" class="move" outlined @click="validate_click(article)">
+      <v-card outlined height="100%" style="border:none">
         <v-img
           v-if="article.banner_url"
           class="white--text align-end"
           height="17em"
           :src="article.banner_url"
-        >
-          <div class="transparent-black">
-            <v-card-title>
-              <h3>{{ article.title }}</h3>
-            </v-card-title>
-          </div>
-        </v-img>
-        <v-card-title v-else>
-          <h3 class>{{ article.title }}</h3>
+        ></v-img>
+        <v-card-title class="move">
+          <h2 @click="showItem(article)">{{ article.title }}</h2>
         </v-card-title>
         <v-card-subtitle class="d-flex flex-row-reverse" flat tile>
           <h4>{{ formatGeneralDay(article.created_at) }}</h4>
         </v-card-subtitle>
-        
+        <v-card-text>{{article.legend}}</v-card-text>
         <v-card-actions v-if="is_administrator">
           <v-spacer />
-          <v-btn icon @click="showItem(article)">
-            <v-icon>tag_faces</v-icon>
-          </v-btn>
+
           <v-btn icon @click="updateItem(article)">
             <v-icon>edit</v-icon>
           </v-btn>
@@ -42,15 +36,19 @@
           </v-btn>
         </v-card-actions>
       </v-card>
+      <div class="border-botom" />
     </v-col>
     <v-col xs="12" sm="6" md="4" lg="6" offset-lg="3">
-      <mugen-scroll v-if="display_scroll" :handler="fetchData" :should-handle="!loading">loading...</mugen-scroll>
+      <mugen-scroll v-if="display_scroll" :handler="fetchData" :should-handle="!loading">
+        <loading-template></loading-template>
+      </mugen-scroll>
     </v-col>
   </v-row>
 </template>
 <script>
-import MugenScroll from "vue-mugen-scroll";
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import MugenScroll from "vue-mugen-scroll";
+import LoadingTemplate from "../partials/loading_template";
 import VueMarkdown from "vue-markdown";
 import date_mixins from "../../mixins/dates";
 import mixins from "../../mixins/";
@@ -64,10 +62,10 @@ export default {
     };
   },
   mixins: [date_mixins, mixins],
-  mounted() {},
   components: {
     VueMarkdown,
-    MugenScroll
+    MugenScroll,
+    LoadingTemplate
   },
   methods: {
     ...mapMutations(["setAlertMessage"]),
@@ -79,7 +77,6 @@ export default {
     ]),
     ...mapActions("articleModule", ["getArticles", "deleteArticle"]),
     fetchData() {
-      this.loading = false;
       this.getArticles({ page: this.page })
         .then(result => {
           switch (result.status) {
@@ -102,7 +99,6 @@ export default {
           this.setArticles(json);
         })
         .catch(err => {
-          // this.displayErrorMessage(err.response);
           console.log(err);
           this.loading = true;
         });

@@ -1,63 +1,94 @@
 <template>
   <v-row>
-    <v-col xs="12" sm="12" offset-md="1" md="10" offset-lg="2" lg="8">
-      <v-row class="ex3">
-        <v-col xs="12" sm="12" md="12" lg="12">
-          <v-card outlined class="mx-auto mx-5">
-            <v-img
-              v-if="category.banner_url"
-              class="white--text align-end"
-              height="600px"
-              :src="category.banner_url"
-            >
-              <div style="background-color: rgba(13, 3, 0, 0.55);">
-                <v-card-title>
-                  <h1 :style="title_color">{{category.name}}</h1>
-                </v-card-title>
-              </div>
-            </v-img>
-            <v-card-title v-else>
-              <h1 :style="title_color">{{category.name}}</h1>
-            </v-card-title>
-            <v-card-subtitle class="d-flex flex-row-reverse" flat tile>
-              <h4>{{ formatGeneralDay(category.created_at) }}</h4>
-            </v-card-subtitle>
-            <v-card-actions v-if="is_administrator">
-              <v-spacer />
-              <v-btn icon @click="updateItem(category)">
-                <v-icon>edit</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+    <v-col xs="12" sm="12" md="12" lg="12">
+      <v-parallax dark :src="category.banner_url" style="height:55.5em">
+        <v-row align="center" justify="center">
+          <v-col class="text-center" cols="12">
+            <h1 class="display-1 font-weight-thin mb-4">{{category.name}}</h1>
+            {{category.articles}}
+            <v-btn icon @click="updateItem(category)" v-if="is_administrator">
+              <v-icon>edit</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-parallax>
     </v-col>
+
+    <v-col
+      xs="12"
+      sm="10"
+      offset-sm="1"
+      md="4"
+      lg="6"
+      offset-lg="3"
+      class="mb-5"
+      v-for="(article, index) in category.articles"
+      :key="index"
+    >
+      <article-light :article="article" />
+      <div class="border-botom" />
+    </v-col>
+    <mugen-scroll v-if="display_scroll" :handler="fetchData" :should-handle="!loading">
+      <loading-template></loading-template>
+    </mugen-scroll>
   </v-row>
 </template>
 <script>
+import ArticleLight from "../articles/article_light";
+import fetch_categories from "../../mixins/fetch_categories";
+import MugenScroll from "vue-mugen-scroll";
+import LoadingTemplate from "../partials/loading_template";
 import date_mixins from "../../mixins/dates";
 import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   name: "CategoryShow",
-  mixins: [date_mixins],
+  components: {
+    MugenScroll,
+    LoadingTemplate,
+    ArticleLight
+  },
+  mixins: [date_mixins, fetch_categories],
   data() {
-    return { reset: true, show_image: false };
+    return {
+      reset: true,
+      show_image: false,
+      loading: false,
+      display_scroll: true
+    };
   },
   computed: {
     ...mapGetters("authModule", ["is_administrator"]),
-    ...mapGetters("categoryModule", ["category", "empty_category"]),
-    title_color(){
-      return `color:${this.category.color}`
+    ...mapGetters("categoryModule", ["category", "empty_category", "page"]),
+    ...mapGetters("articleModule", ["articles"]),
+    title_color() {
+      return `color:${this.category.color}`;
     }
   },
   mounted() {
     if (this.empty_category)
       this.$router.push({ name: this.$t("path.categories.index.name") });
+    else {
+      this.setPage(1);
+      // this.display_scroll = true;
+    }
   },
   methods: {
-    ...mapMutations("categoryModule", ["setCategory"]),
+    ...mapMutations("articleModule", ["setArticles"]),
+    ...mapMutations("categoryModule", ["setCategory", "setPage"]),
     ...mapMutations("appModule", ["setMessage"]),
     // ...mapActions("categoryModule", ["addPicture", "destroyEPicture"]),
+    fetchData() {
+      let fetch_params = { page: this.page, id: this.category.id };
+      this.fetch_article_category(fetch_params)
+        .then(result => {
+          console.log(result);
+          this.setCategoryArticles(result);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      this.display_scroll = false;
+    },
     onFilePicked(e) {
       const files = e.target.files;
     },

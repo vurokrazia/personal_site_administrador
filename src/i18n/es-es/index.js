@@ -29,6 +29,7 @@ export default {
     create_continue: "Crear otro registro",
     name: "Nombre",
     body: "Cuerpo",
+    legend: "Leyenda",
     color: "Color",
     last_name: "Apellidos",
     email: "Correo",

@@ -4,32 +4,26 @@
       v-for="(category, index) in categories"
       :key="index"
       xs="12"
-      sm="6"
+      sm="10"
+      offset-sm="1"
       md="4"
-      lg="8"
-      offset-lg="2"
+      lg="6"
+      offset-lg="3"
+      class="mb-5"
     >
-      <v-card height="100%" class="move" @click="validate_click(category)">
+      <v-card height="100%"   outlined style="border:none" @click="showItem(category)">
         <v-img
           v-if="category.banner_url"
           class="white--text align-end"
           height="17em"
           :src="category.banner_url"
         >
-          <div class="transparent-black">
-            <v-card-title>
-              <h1>{{ category.name }}</h1>
-            </v-card-title>
-          </div>
         </v-img>
-        <v-card-title v-else>
-          <h1 >{{ category.name }}</h1>
+        <v-card-title>
+          <h1 class="move">{{ category.name }}</h1>
         </v-card-title>
         <v-card-actions v-if="is_administrator">
           <v-spacer />
-          <v-btn icon @click="showItem(category)">
-            <v-icon>tag_faces</v-icon>
-          </v-btn>
           <v-btn icon @click="updateItem(category)">
             <v-icon>edit</v-icon>
           </v-btn>
@@ -38,6 +32,7 @@
           </v-btn>
         </v-card-actions>
       </v-card>
+      <div class="border-botom"/>
     </v-col>
   </v-row>
 </template>
@@ -59,7 +54,9 @@ export default {
         this.setCategories(json);
       })
       .catch(err => {
-        this.displayErrorMessage(err.response);
+        
+        console.log(err);
+        
       });
   },
   components: {

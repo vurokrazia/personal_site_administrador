@@ -9,7 +9,7 @@
       lg="8"
       offset-lg="2"
     >
-      <v-card height="100%" class="move" @click="validate_click(article)">
+      <v-card  height="100%" class="move" @click="validate_click(article)" >
         <v-img
           v-if="article.banner_url"
           class="white--text align-end"

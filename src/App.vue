@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <navigation></navigation>
-    <v-content style="padding: 64px 0px 0px; background-color: #eaeaea;">
+    <v-content style="padding: 53px 0px 0px; background-color: #ffffff;">
       <display-message v-if="message.show" />
       <router-view></router-view>
     </v-content>
@@ -123,6 +123,15 @@ export default {
     transform: translate(1px, -2px) rotate(-1deg);
   }
 }
+ .border-botom {
+    /* background-color: red; */
+    height: 1px;
+    border: none !important;
+    padding-top: 5px ;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    border-bottom: 1.8px solid #e0e0e083 !important;
+  }
 .transparent-black {
   background-color: rgba(13, 3, 0, 0.55);
 }

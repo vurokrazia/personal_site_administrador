@@ -17,6 +17,23 @@
           @blur="$v.resource.title.$touch()"
         />
 
+        <select-options
+          @update_select_list="assign_options"
+          :items="list_categories"
+          item_text="name"
+          item_value="id"
+        />
+
+        <v-textarea
+          class="capitalize"
+          v-model="resource.legend"
+          :label="$t('inputs.legend')"
+          required
+          :error-messages="legendErrors"
+          @input="$v.resource.legend.$touch()"
+          @blur="$v.resource.legend.$touch()"
+        />
+
         <input type="file" @change="onPictureSelected" />
 
         <v-textarea
@@ -38,6 +55,8 @@
   </div>
 </template>
 <script>
+import SelectOptions from "../partials/select_options";
+import fetch_categories from "../../mixins/fetch_categories";
 import VueMarkdown from "vue-markdown";
 import { validationMixin } from "vuelidate";
 import {
@@ -54,12 +73,14 @@ export default {
     element: Object
   },
   components: {
-    VueMarkdown
+    VueMarkdown,
+    SelectOptions
   },
-  mixins: [validationMixin],
+  mixins: [validationMixin, fetch_categories],
   validations: {
     resource: {
       title: { required, minLength: minLength(5), maxLength: maxLength(255) },
+      legend: { required, minLength: minLength(5), maxLength: maxLength(255) },
       body: {
         required,
         minLength: minLength(5)
@@ -71,10 +92,21 @@ export default {
     if (this.element) {
       this.resource = this.element;
     }
+    this.fetch_categories({ page: 1 })
+      .then(result => {
+        console.log(result);
+        this.list_categories = result;
+      })
+      .catch(err => {
+        console.log(err);
+      });
   },
   data() {
     return {
       display_markdown: false,
+      list_categories: [],
+      create_categories: [],
+      update_categories: [],
       resource: {
         title: null,
         body: null
@@ -82,7 +114,9 @@ export default {
     };
   },
   methods: {
-    changeMarkDown() {},
+    assign_options(data) {
+      this.create_categories = data.options;
+    },
     add_body() {
       this.$emit("add-body");
     },
@@ -90,12 +124,22 @@ export default {
       this.resource.banner = event.target.files[0];
     },
     convert_resource() {
-      //return {source:this.resource}
       return this.resource.body ? this.resource.body : "";
+    },
+    validate_categories() {
+      if (this.create_categories.length != 0)
+        this.resource.has_categories_attributes = this.create_categories.map(
+          item => {
+            return {
+              category_id: item.id
+            }
+          }
+        );
     },
     sendElement() {
       this.$v.$touch();
       if (!this.$v.$invalid) {
+        this.validate_categories();
         this.$emit("send-resource", this.resource);
       }
     }
@@ -121,6 +165,31 @@ export default {
         errors.push(
           this.$t("validations.maxLength", {
             field: this.$t("inputs.title").toLowerCase(),
+            length: 255
+          })
+        );
+      return errors;
+    },
+    legendErrors() {
+      const errors = [];
+      if (!this.$v.resource.legend.$dirty) return errors;
+      !this.$v.resource.legend.required &&
+        errors.push(
+          this.$t("validations.required", {
+            field: this.$t("inputs.legend").toLowerCase()
+          })
+        );
+      !this.$v.resource.legend.minLength &&
+        errors.push(
+          this.$t("validations.minLength", {
+            field: this.$t("inputs.legend").toLowerCase(),
+            length: 5
+          })
+        );
+      !this.$v.resource.legend.maxLength &&
+        errors.push(
+          this.$t("validations.maxLength", {
+            field: this.$t("inputs.legend").toLowerCase(),
             length: 255
           })
         );

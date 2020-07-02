@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="my-5">
     <v-col xs="12" sm="6" offset-md="1" md="10" lg="8" offset-lg="2">
       <v-card :loading="loading" shaped>
         <v-toolbar color="primary" flat>
@@ -59,7 +59,8 @@ export default {
   },
   watch: {
     create_article() {
-      if (this.create_article) this.registerResource(this.form_data_resource(this.article, "article"));
+      if (this.create_article)
+        this.registerResource(this.form_data_resource(this.article, "article"));
     },
     validate_article_body() {
       console.log("new", this.validate_article_body);
@@ -90,7 +91,10 @@ export default {
     },
     init_validate_article_bodies(data) {
       if (this.article_bodies.length == 0) {
-        this.registerResource(this.form_data_resource(data, "article"));
+        debugger;
+        if (data.banner)
+          this.registerResource(this.form_data_resource(data, "article"));
+        else this.registerResource(data);
       } else {
         this.setArticle(data);
         this.setValidateArticleBody({

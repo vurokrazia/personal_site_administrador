@@ -20,6 +20,7 @@ export async function getArticle({ commit }, resource) {
 export async function getArticles(commit, data) {
   let url = `articles`;
   if (data.page) url += `?page=${data.page}`;
+  if (data.category_id) url += `&category_id=${data.category_id}`;
   return api().get(url);
 }
 export async function deleteArticle(commit, id) {

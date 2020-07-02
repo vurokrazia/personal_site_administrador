@@ -10,6 +10,7 @@ export function setArticle(state, article) {
   state.article = {...article};
 }
 export function setArticles(state, data) {
+  console.log("setArticles",data, state.page);
   if (state.page === 1) {
     state.articles = data;
   } else {

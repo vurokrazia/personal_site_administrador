@@ -1,5 +1,5 @@
 <template>
-  <v-row>
+  <v-row class="my-5">
     <v-col xs="12" sm="6" offset-md="1" md="10" lg="8" offset-lg="2">
       <v-card :loading="loading" shaped>
         <v-toolbar color="primary" flat>
@@ -18,10 +18,11 @@
 <script>
 import Formulario from "./form";
 import options_create from "../../mixins/options_create";
+import fetch_articles from "../../mixins/fetch_articles";
 // import utils from "../../mixins";
 import { mapActions, mapMutations, mapGetters } from "vuex";
 export default {
-  name: "ExperienceEdit",
+  name: "ArticleEdit",
   components: {
     Formulario
   },
@@ -34,22 +35,20 @@ export default {
     if (this.empty_article)
       this.$router.push({ name: this.$t("path.articles.index.name") });
   },
-  mixins: [options_create],
+  mixins: [options_create, fetch_articles],
   methods: {
     ...mapActions("articleModule", ["updateArticle"]),
     ...mapMutations("articleModule", ["setArticle", "setUpdateArticle"]),
     updateResource(json) {
       this.loading = true;
-      this.updateArticle({
-        form: this.form_data_resource(json, "article"),
+      this.fetch_update_article({
+        form: json.banner ? this.form_data_resource(json, "article") : json,
         id: json.id
       })
         .then(response => {
-          let json = response.data;
-          this.setArticle(json);
-          this.setUpdateArticle(json);
+          this.setArticle(response);
+          this.setUpdateArticle(response);
           this.loading = false;
-          // this.displayMessage(this.$t("messages.updated_success"), "success");
           this.$router.push({ name: this.$t("path.articles.show.name") });
         })
         .catch(err => {
@@ -59,7 +58,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters("articleModule", ["article","empty_article"])
+    ...mapGetters("articleModule", ["article", "empty_article"])
   }
 };
 </script>
