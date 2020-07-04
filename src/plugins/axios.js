@@ -1,4 +1,5 @@
 import store from '../store/index';
+import { user_key, logged_key, token_key } from "../mixins/var";
 import {url}  from './enviroment_vars'
 import axios from 'axios';
 export default (multipart = false) => {
@@ -12,8 +13,8 @@ export default (multipart = false) => {
 };
 function get_token() {
   var token
-  if (localStorage.getItem('development_user'))
-    token = JSON.parse(localStorage.getItem('development_user')).token
+  if (localStorage.getItem(user_key))
+    token = JSON.parse(localStorage.getItem(user_key)).token
   return token
 }
 function get_headers(multipart) {
