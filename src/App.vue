@@ -31,7 +31,7 @@ export default {
       return this.$store.state.alert.message;
     }
   },
-  created() {
+  mounted() {
     this.findStorage();
   },
   watch: {

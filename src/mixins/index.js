@@ -7,28 +7,39 @@ export default {
   methods: {
     ...mapMutations(["setAlertMessage"]),
     ...mapMutations("authModule", ["setUser"]),
+    ...mapActions("authModule", ["me"]),
+
     findStorage() {
-      if (localStorage.getItem(user_key)) {
-        this.setUser(JSON.parse(localStorage.getItem(user_key)));
-        //this.$router.push("/")
+      //me
+      let token = localStorage.getItem(token_key)
+      if (token) {
+        this.me()
+          .then((result) => {
+            let user = {
+              ...result.data,
+              token: JSON.parse(token)
+            }
+            this.setUser(user)
+          }).catch((err) => {
+            localStorage.removeItem(token_key);
+          });
       }
     },
     logoutStorage() {
       this.setUser(null);
     },
     copyStringToClipboard(str) {
-      console.log(str);
     },
     infiniteScroll(name, accion) {
       var listElm = document.querySelector(name);
-      console.log("ok",listElm);
+      console.log("ok", listElm);
       listElm.addEventListener('scroll', function () {
         console.log("buscando");
         if (listElm.scrollTop + listElm.clientHeight >= listElm.scrollHeight) {
           accion()
         }
       });
-      
+
     },
     findProfilePerson() {
 
