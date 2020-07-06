@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <navigation></navigation>
-    <v-content style="padding: 53px 0px 0px; background-color: #ffffff;">
+    <v-content style="padding: 53px 0px 0px; ">
       <display-message v-if="message.show" />
       <router-view></router-view>
     </v-content>
@@ -28,7 +28,7 @@ export default {
   computed: {
     ...mapState("appModule", ["message"]),
     createAlert() {
-      return this.$store.state.alert.show;
+      return this.$store.state.alert.message;
     }
   },
   created() {
@@ -42,12 +42,12 @@ export default {
           title: this.$store.state.alert.message,
           showConfirmButton: false,
           timer: this.$store.state.alert.timeout,
-          toast: this.$store.state.alert.toast,
-          imageUrl:
-            "https://as.com/meristation/imagenes/2020/01/07/header_image/130019411578411635.jpg",
-          imageWidth: 400,
-          imageHeight: 200,
-          imageAlt: "Custom image"
+          toast: this.$store.state.alert.toast
+          // , imageUrl:
+          //   "https://as.com/meristation/imagenes/2020/01/07/header_image/130019411578411635.jpg",
+          // imageWidth: 400,
+          // imageHeight: 200,
+          // imageAlt: "Custom image"
         });
         setTimeout(() => {
           this.setAlertMessage({
@@ -57,7 +57,7 @@ export default {
             timeout: 1000,
             toast: false
           });
-        }, this.$store.state.alert.timeout + 1000);
+        }, this.$store.state.alert.timeout + 500);
       }
     }
   }

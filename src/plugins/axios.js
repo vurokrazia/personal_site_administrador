@@ -1,7 +1,7 @@
 import store from '../store/index';
-import { user_key, logged_key, token_key } from "../mixins/var";
-import {url}  from './enviroment_vars'
+import { url, user_key, logged_key, token_key } from "../env_files/var";
 import axios from 'axios';
+
 export default (multipart = false) => {
   return axios.create(
     {
@@ -11,19 +11,15 @@ export default (multipart = false) => {
     }
   );
 };
-function get_token() {
-  var token
-  if (localStorage.getItem(user_key))
-    token = JSON.parse(localStorage.getItem(user_key)).token
-  return token
-}
+
 function get_headers(multipart) {
-  let headers =
+  var headers =
   {
-    //Authorization: store.state.authModule.token ? `Bearer ${store.state.authModule.token}` : null,
-    Authorization: `Bearer ${get_token()}`,
+    Authorization: `Bearer ${store.getters['authModule/token']}`,
     Accept: 'application/json',
     'Content-Type': 'application/json'
   }
+  // if (multipart)
+  //   headers['Content-Type'] = 'multipart/form-data'
   return headers
 }

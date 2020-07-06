@@ -7,7 +7,7 @@ export async function createCategory({ commit }, resource) {
 }
 
 export async function updateCategory({ commit }, resource) {
-  api().put(`${categories}/${resource.id}` , resource.form)
+  api().put(`${url}/${resource.id}` , resource.form)
   .then((result) => {
     commit('setCategory', result.data)
     commit('setUpdateCategory', result.data)
@@ -18,7 +18,7 @@ export async function updateCategory({ commit }, resource) {
 }
 
 export async function getCategory({ commit }, resource) {
-  return api().get(`categories/${resource.id}`);
+  return api().get(`${url}/${resource.id}`);
 }
 
 export async function getCategories(commit, data) {

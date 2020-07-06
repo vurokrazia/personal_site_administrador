@@ -5,10 +5,10 @@ export default {
     snackbar: "",
     text: "",
     confirm: "",
-    show:false
+    show: false
   },
   theme_on: false,
-  loading:false,
+  loading: false,
   url: '',
   languages: {
     'en-us': {

@@ -27,7 +27,6 @@
         <v-card-text>{{article.legend}}</v-card-text>
         <v-card-actions v-if="is_administrator">
           <v-spacer />
-
           <v-btn icon @click="updateItem(article)">
             <v-icon>edit</v-icon>
           </v-btn>
@@ -38,8 +37,8 @@
       </v-card>
       <div class="border-botom" />
     </v-col>
-    <v-col xs="12" sm="6" md="4" lg="6" offset-lg="3">
-      <mugen-scroll v-if="display_scroll" :handler="fetchData" :should-handle="!loading">
+    <v-col xs="12" sm="12" md="12" lg="12" v-if="display_scroll">
+      <mugen-scroll :handler="fetchData" :should-handle="!loading">
         <loading-template></loading-template>
       </mugen-scroll>
     </v-col>
@@ -52,20 +51,26 @@ import LoadingTemplate from "../partials/loading_template";
 import VueMarkdown from "vue-markdown";
 import date_mixins from "../../mixins/dates";
 import mixins from "../../mixins/";
+import mixin_articles from "../../mixins/fetch_articles";
 // import utils from "../../mixins/utils";
 export default {
   name: "IndexArticles",
   data() {
     return {
       loading: false,
-      display_scroll: true
+      display_scroll: false
     };
   },
-  mixins: [date_mixins, mixins],
+  mixins: [date_mixins, mixins, mixin_articles],
   components: {
     VueMarkdown,
     MugenScroll,
     LoadingTemplate
+  },
+  created() {
+    this.setPage(1);
+    this.setArticles([]);
+    this.display_scroll = true;
   },
   methods: {
     ...mapMutations(["setAlertMessage"]),
@@ -77,30 +82,15 @@ export default {
     ]),
     ...mapActions("articleModule", ["getArticles", "deleteArticle"]),
     fetchData() {
-      this.getArticles({ page: this.page })
+      this.fetch_articles({ page: this.page })
         .then(result => {
-          switch (result.status) {
-            case 200:
-              this.loading = false;
-              break;
-            case 204:
-              this.setAlertMessage({
-                show: true,
-                type: "info",
-                message: this.$t("status.empty_list"),
-                timeout: 3000
-              });
-            default:
-              this.loading = true;
-              this.display_scroll = false;
-              break;
-          }
-          var json = result.data;
-          this.setArticles(json);
+          this.setArticles(result);
         })
         .catch(err => {
-          console.log(err);
-          this.loading = true;
+          this.display_scroll = false;
+        })
+        .finally(err => {
+          this.loading = false;
         });
     },
     updateItem(article) {

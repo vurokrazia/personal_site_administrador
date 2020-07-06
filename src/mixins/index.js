@@ -1,4 +1,4 @@
-import { user_key, token_key } from "./../mixins/var";
+import { user_key, token_key } from "../env_files/var";
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   data() {

@@ -9,7 +9,7 @@
       lg="8"
       offset-lg="2"
     >
-      <v-card  height="100%" class="move" @click="validate_click(article)" >
+      <v-card height="100%" class="move" @click="validate_click(article)">
         <v-img
           v-if="article.banner_url"
           class="white--text align-end"
@@ -42,41 +42,59 @@
         </v-card-actions>
       </v-card>
     </v-col>
+    <v-col xs="12" sm="12" md="12" lg="12" v-if="display_scroll">
+      <mugen-scroll :handler="fetchData" :should-handle="!loading">
+        <loading-template></loading-template>
+      </mugen-scroll>
+    </v-col>
   </v-row>
 </template>
 <script>
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import VueMarkdown from "vue-markdown";
+import MugenScroll from "vue-mugen-scroll";
+import LoadingTemplate from "../components/partials/loading_template";
 import date_mixins from "../mixins/dates";
-// import utils from "../../mixins/utils";
+import fetch_articles from "../mixins/dates";
 export default {
   name: "IndexArticles",
   data() {
-    return {};
+    return {
+      display_scroll: false,
+      loading: false
+    };
   },
-  mounted() {
-    this.getArticles()
-      .then(result => {
-        var json = result.data;
-        this.setArticles(json);
-        this.setStart(json.page);
-      })
-      .catch(err => {
-        this.displayErrorMessage(err.response);
-      });
+  created() {
+    this.setArticles([]);
+    this.setPage(1);
+    this.display_scroll = true;
   },
   components: {
-    VueMarkdown
+    VueMarkdown,
+    MugenScroll,
+    LoadingTemplate
   },
-  mixins: [date_mixins],
+  mixins: [date_mixins, fetch_articles],
   methods: {
     ...mapMutations("articleModule", [
-      "setStart",
+      "setPage",
       "setArticles",
       "setArticle",
       "removeArticle"
     ]),
     ...mapActions("articleModule", ["getArticles", "deleteArticle"]),
+    fetchData() {
+      this.fetch_articles({ page: this.page })
+        .then(result => {
+          this.setArticles(result);
+        })
+        .catch(err => {
+          this.display_scroll = false;
+        })
+        .finally(err => {
+          this.loading = false;
+        });
+    },
     updateItem(article) {
       this.assing_article(article, "edit");
     },

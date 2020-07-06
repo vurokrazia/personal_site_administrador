@@ -14,7 +14,7 @@ export function setMessage(state, message) {
   state.message.color = message.color ? message.color : state.message.color
   state.message.timeout = message.timeout ? message.timeout : state.message.timeout
   state.message.snackbar = message.snackbar ? message.snackbar : state.message.snackbar
-  state.message.text = message.text ? message.text : state.message.text
+  state.message.message = message.message ? message.message : state.message.message
   state.message.confirm = message.confirm ? message.confirm : state.message.confirm
-  state.message.show = message.text != ""
+  //state.message.show = message.text != ""
 }

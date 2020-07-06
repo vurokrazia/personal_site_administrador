@@ -63,7 +63,7 @@ export default {
         this.registerResource(this.form_data_resource(this.article, "article"));
     },
     validate_article_body() {
-      console.log("new", this.validate_article_body);
+      //console.log("new", this.validate_article_body);
     }
   },
   created() {
@@ -91,10 +91,9 @@ export default {
     },
     init_validate_article_bodies(data) {
       if (this.article_bodies.length == 0) {
-        debugger;
         if (data.banner)
           this.registerResource(this.form_data_resource(data, "article"));
-        else this.registerResource(data);
+        else this.registerResource({ article: data });
       } else {
         this.setArticle(data);
         this.setValidateArticleBody({
