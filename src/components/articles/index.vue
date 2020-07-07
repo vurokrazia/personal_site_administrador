@@ -85,6 +85,7 @@ export default {
       this.fetch_articles({ page: this.page })
         .then(result => {
           this.setArticles(result);
+          if (this.result.length != 15) this.display_scroll = false;
         })
         .catch(err => {
           this.display_scroll = false;

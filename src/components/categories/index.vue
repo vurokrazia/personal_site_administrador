@@ -92,6 +92,7 @@ export default {
       this.fetch_categories({ page: this.page })
         .then(result => {
           this.setCategories(result);
+          if (this.result.length != 15) this.display_scroll = false;
         })
         .catch(err => {
           this.display_scroll = false;
