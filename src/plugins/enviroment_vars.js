@@ -1,1 +1,0 @@
-export const url = process.env.NODE_ENV == 'production' ? 'https://vk.vurokrazia.com/api/v1/' : 'http://159.65.238.178/api/v1/'
