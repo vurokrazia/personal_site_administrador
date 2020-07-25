@@ -1,5 +1,8 @@
 FROM node:9.11.1-alpine
 
+# To handle 'not get uid/gid'
+RUN npm config set unsafe-perm true
+
 # instalar un simple servidor http para servir nuestro contenido estático
 RUN npm install -g http-server
 
