@@ -1,31 +1,25 @@
 import { mapMutations, mapGetters, mapActions } from "vuex";
 export default {
   methods: {
-    ...mapActions("articleModule", ["getArticles","updateArticle"]),
+    ...mapActions("articleModule", ["getArticles", "updateArticle"]),
     ...mapMutations(["setAlertMessage"]),
     ...mapMutations("articleModule", [
       "setArticles",
       "setPage"
     ]),
-    displayMessage(message, color) {
-      alert(message)
-      this.setAlertMessage({
-        color: color,
-        timeout: 3000,
-        snackbar: "0123456789",
-        text: message,
-        confirm: false
-      });
+    displayMessage(err) {
+      var data = err.response.data;
+      if (data.message)
+        this.setAlertMessage({
+          show: true,
+          type: "error",
+          message: data.message,
+          timeout: 3000
+        });
+      else
+        console.log(err);
     },
-    proxy_params(params) {
-      console.log("proxy_params",params);
-      if (params.page && params.page == 1) {
-        this.setPage(params.page)
-        this.setArticles([])
-      }
-    },
-    fetch_article(fetch_params) {
-      this.proxy_params(fetch_params)
+    fetch_articles(fetch_params) {
       return new Promise((resolve, reject) => {
         this.getArticles(fetch_params)
           .then(result => {
@@ -34,20 +28,21 @@ export default {
                 resolve(result.data)
                 break;
               case 204:
-                this.setAlertMessage({
-                  show: true,
-                  type: "info",
-                  message: this.$t("status.empty_list"),
-                  timeout: 3000
+                this.$swal.fire({
+                  icon: "info",
+                  title: this.$t("status.empty_list"),
+                  showConfirmButton: false,
+                  timer: 3000,
+                  toast: true
                 });
-                resolve([])
+                reject()
               default:
                 reject()
                 break;
             }
           })
           .catch(err => {
-            console.log(err);
+            this.displayMessage(err)
             reject()
           });
       })

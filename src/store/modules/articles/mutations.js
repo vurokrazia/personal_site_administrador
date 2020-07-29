@@ -3,14 +3,12 @@ export function setPage(state, page) {
   state.page = page;
 }
 export function setArticle(state, article) {
-  if( article == null)
-    {
-      state.article_bodies = []
-    }
-  state.article = {...article};
+  if (article == null) {
+    state.article_bodies = []
+  }
+  state.article = { ...article };
 }
 export function setArticles(state, data) {
-  console.log("setArticles",data, state.page);
   if (state.page === 1) {
     state.articles = data;
   } else {
@@ -19,7 +17,8 @@ export function setArticles(state, data) {
       return n.id;
     });
   }
-  state.page++
+  if (data.length != 0)
+    state.page++
 }
 export function setUpdateArticle(state, data) {
   var index = findIndex(state.articles, {
@@ -32,7 +31,7 @@ export function removeArticle(state, item) {
     return n.id != item.id;
   });
 }
-export function setCancelValidate(state,item){
+export function setCancelValidate(state, item) {
   state.validate_article_body = item
 }
 export function setValidateArticleBody(state, item) {

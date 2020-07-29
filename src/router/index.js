@@ -10,21 +10,21 @@ import RegisterUsers from "../components/auth/register";
 import LoginUsers from "../components/auth/login";
 
 
-import ArticlesView from '../views/Article' 
+import ArticlesView from '../views/Article'
 import Index_Article from '../components/articles/index'
 import New_Article from '../components/articles/new'
 import Edit_Article from '../components/articles/edit'
 import Show_Article from '../components/articles/show'
 
-import CategoriesView from '../views/Category' 
+import CategoriesView from '../views/Category'
 import Index_Category from '../components/categories/index'
 import New_Category from '../components/categories/new'
 import Edit_Category from '../components/categories/edit'
 import Show_Category from '../components/categories/show'
 
 Vue.use(VueRouter)
-  
-  const routes = [
+
+const routes = [
   {
     path: '/',
     name: 'Home',
@@ -71,16 +71,20 @@ Vue.use(VueRouter)
         component: New_Article,
         name: name_routes.articles.new.name,
         meta: {
-          title: name_routes.articles.new.title
-        }
+          title: name_routes.articles.new.title,
+          permission_level: 1
+        },
+        beforeEnter: (to, from, next) => beforeEnterValidatePermissions(to, from, next),
       },
       {
         path: name_routes.articles.edit.path,
         component: Edit_Article,
         name: name_routes.articles.edit.name,
         meta: {
-          title: name_routes.articles.edit.title
-        }
+          title: name_routes.articles.edit.title,
+          permission_level: 1
+        },
+        beforeEnter: (to, from, next) => beforeEnterValidatePermissions(to, from, next),
       },
       {
         path: name_routes.articles.index.path,
@@ -112,16 +116,20 @@ Vue.use(VueRouter)
         component: New_Category,
         name: name_routes.categories.new.name,
         meta: {
-          title: name_routes.categories.new.title
-        }
+          title: name_routes.categories.new.title,
+          permission_level: 1
+        },
+        beforeEnter: (to, from, next) => beforeEnterValidatePermissions(to, from, next),
       },
       {
         path: name_routes.categories.edit.path,
         component: Edit_Category,
         name: name_routes.categories.edit.name,
         meta: {
-          title: name_routes.categories.edit.title
-        }
+          title: name_routes.categories.edit.title,
+          permission_level: 1
+        },
+        beforeEnter: (to, from, next) => beforeEnterValidatePermissions(to, from, next),
       },
       {
         path: name_routes.categories.index.path,
@@ -154,16 +162,36 @@ const beforeEnter = (to, from, next) => {
     next({
       path: "/"
     });
+  }
+  next();
+};
+
+
+const beforeEnterValidatePermissions = (to, from, next) => {
+  var user = store.state.authModule.user
+  if (user) {
+    let permission_level = user.permission_level
+    if (permission_level != to.meta.permission_level)
+      next({
+        path: "/"
+      });
+    else {
+      next();
+    }
   } else {
-    next();
+    next({
+      path: "/"
+    });
   }
 };
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
-  if(document.title == name_routes.articles.show.title)
-    document.title = store.getters['articleModule/article'].title
 
+  if (document.title == name_routes.articles.show.title)
+    document.title = store.getters['articleModule/article'].title
+  else if (document.title == name_routes.categories.show.title)
+    document.title = store.getters['categoryModule/category'].name
   next();
 });
 

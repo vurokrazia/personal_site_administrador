@@ -5,7 +5,6 @@
         <v-row align="center" justify="center">
           <v-col class="text-center" cols="12">
             <h1 class="display-1 font-weight-thin mb-4">{{category.name}}</h1>
-            {{category.articles}}
             <v-btn icon @click="updateItem(category)" v-if="is_administrator">
               <v-icon>edit</v-icon>
             </v-btn>
@@ -13,7 +12,6 @@
         </v-row>
       </v-parallax>
     </v-col>
-
     <v-col
       xs="12"
       sm="10"
@@ -28,9 +26,11 @@
       <article-light :article="article" />
       <div class="border-botom" />
     </v-col>
-    <mugen-scroll v-if="display_scroll" :handler="fetchData" :should-handle="!loading">
-      <loading-template></loading-template>
-    </mugen-scroll>
+    <v-col xs="12" sm="12" md="12" lg="12" v-if="display_scroll">
+      <mugen-scroll :handler="fetchData" :should-handle="!loading">
+        <loading-template></loading-template>
+      </mugen-scroll>
+    </v-col>
   </v-row>
 </template>
 <script>
@@ -53,7 +53,7 @@ export default {
       reset: true,
       show_image: false,
       loading: false,
-      display_scroll: true
+      display_scroll: false
     };
   },
   computed: {
@@ -69,25 +69,27 @@ export default {
       this.$router.push({ name: this.$t("path.categories.index.name") });
     else {
       this.setPage(1);
-      // this.display_scroll = true;
+      this.setCategoryArticles([]);
+      this.display_scroll = true;
     }
   },
   methods: {
     ...mapMutations("articleModule", ["setArticles"]),
     ...mapMutations("categoryModule", ["setCategory", "setPage"]),
-    ...mapMutations("appModule", ["setMessage"]),
     // ...mapActions("categoryModule", ["addPicture", "destroyEPicture"]),
     fetchData() {
       let fetch_params = { page: this.page, id: this.category.id };
+      this.loading = true;
       this.fetch_article_category(fetch_params)
         .then(result => {
-          console.log(result);
           this.setCategoryArticles(result);
         })
         .catch(err => {
-          console.log(err);
+          this.display_scroll = false
+        })
+        .finally(err => {
+          this.loading = false;
         });
-      this.display_scroll = false;
     },
     onFilePicked(e) {
       const files = e.target.files;

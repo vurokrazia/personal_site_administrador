@@ -11,7 +11,8 @@ export function setCategoryArticles(state, data) {
       return n.id;
     });
   }
-  state.page++
+  if (data.length != 0)
+    state.page++
 }
 export function setCategory(state, category) {
   state.category = { ...category };
@@ -26,7 +27,8 @@ export function setCategories(state, data) {
       return n.id;
     });
   }
-  state.page++
+  if (data.length != 0)
+    state.page++
 }
 export function setUpdateCategory(state, data) {
   var index = findIndex(state.categories, {

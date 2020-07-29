@@ -47,11 +47,10 @@ export default {
       })
         .then(response => {
           this.loading = false;
-          // this.displayMessage(this.$t("messages.updated_success"), "success");
           this.$router.push({ name: this.$t("path.categories.show.name") });
         })
         .catch(err => {
-          this.displayErrorMessage(err.response);
+          console.log(err);
           this.loading = false;
         });
     }
