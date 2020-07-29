@@ -36,6 +36,15 @@
 
         <input type="file" @change="onPictureSelected" />
 
+        <v-row style="padding-top:20px">
+          <v-col xs="12" sm="12" md="6" lg="6" class="mb-5">
+            <image-index title="titulo" />
+          </v-col>
+          <v-col xs="12" sm="12" md="6" lg="6" class="mb-5">
+            <image-create title="titulo" />
+          </v-col>
+        </v-row>
+
         <v-textarea
           class="capitalize"
           v-model="resource.body"
@@ -50,11 +59,13 @@
     <v-card-actions class="d-flex flex-row-reverse">
       <v-btn text small color="primary" @click="sendElement" class="mx-5">{{ $t("buttons.send") }}</v-btn>
       <v-btn text small color="secondary" @click="add_body">plus</v-btn>
-      <v-btn text small color="secondary" @click="display_markdown = !display_markdown">------------</v-btn>
+      <v-btn text small color="secondary" @click="display_markdown = !display_markdown">Markdown</v-btn>
     </v-card-actions>
   </div>
 </template>
 <script>
+import ImageIndex from "../images";
+import ImageCreate from "../images/create";
 import SelectOptions from "../partials/select_options";
 import fetch_categories from "../../mixins/fetch_categories";
 import VueMarkdown from "vue-markdown";
@@ -64,17 +75,19 @@ import {
   maxLength,
   minLength,
   email,
-  between
+  between,
 } from "vuelidate/lib/validators";
 import { mapGetters } from "vuex";
 export default {
   name: "FormExperience",
   props: {
-    element: Object
+    element: Object,
   },
   components: {
+    ImageCreate,
+    ImageIndex,
     VueMarkdown,
-    SelectOptions
+    SelectOptions,
   },
   mixins: [validationMixin, fetch_categories],
   validations: {
@@ -83,21 +96,20 @@ export default {
       legend: { required, minLength: minLength(5), maxLength: maxLength(255) },
       body: {
         required,
-        minLength: minLength(5)
+        minLength: minLength(5),
         // maxLength: maxLength(255)
-      }
-    }
+      },
+    },
   },
   mounted() {
     if (this.element) {
       this.resource = this.element;
     }
     this.fetch_categories({ page: 1 })
-      .then(result => {
-        console.log(result);
+      .then((result) => {
         this.list_categories = result;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   },
@@ -109,8 +121,8 @@ export default {
       update_categories: [],
       resource: {
         title: null,
-        body: null
-      }
+        body: null,
+      },
     };
   },
   methods: {
@@ -129,10 +141,10 @@ export default {
     validate_categories() {
       if (this.create_categories.length != 0)
         this.resource.has_categories_attributes = this.create_categories.map(
-          item => {
+          (item) => {
             return {
-              category_id: item.id
-            }
+              category_id: item.id,
+            };
           }
         );
     },
@@ -142,7 +154,7 @@ export default {
         this.validate_categories();
         this.$emit("send-resource", this.resource);
       }
-    }
+    },
   },
   computed: {
     titleErrors() {
@@ -151,21 +163,21 @@ export default {
       !this.$v.resource.title.required &&
         errors.push(
           this.$t("validations.required", {
-            field: this.$t("inputs.title").toLowerCase()
+            field: this.$t("inputs.title").toLowerCase(),
           })
         );
       !this.$v.resource.title.minLength &&
         errors.push(
           this.$t("validations.minLength", {
             field: this.$t("inputs.title").toLowerCase(),
-            length: 5
+            length: 5,
           })
         );
       !this.$v.resource.title.maxLength &&
         errors.push(
           this.$t("validations.maxLength", {
             field: this.$t("inputs.title").toLowerCase(),
-            length: 255
+            length: 255,
           })
         );
       return errors;
@@ -176,21 +188,21 @@ export default {
       !this.$v.resource.legend.required &&
         errors.push(
           this.$t("validations.required", {
-            field: this.$t("inputs.legend").toLowerCase()
+            field: this.$t("inputs.legend").toLowerCase(),
           })
         );
       !this.$v.resource.legend.minLength &&
         errors.push(
           this.$t("validations.minLength", {
             field: this.$t("inputs.legend").toLowerCase(),
-            length: 5
+            length: 5,
           })
         );
       !this.$v.resource.legend.maxLength &&
         errors.push(
           this.$t("validations.maxLength", {
             field: this.$t("inputs.legend").toLowerCase(),
-            length: 255
+            length: 255,
           })
         );
       return errors;
@@ -201,14 +213,14 @@ export default {
       !this.$v.resource.body.required &&
         errors.push(
           this.$t("validations.required", {
-            field: this.$t("inputs.body").toLowerCase()
+            field: this.$t("inputs.body").toLowerCase(),
           })
         );
       !this.$v.resource.body.minLength &&
         errors.push(
           this.$t("validations.minLength", {
             field: this.$t("inputs.body").toLowerCase(),
-            length: 5
+            length: 5,
           })
         );
       // !this.$v.resource.body.maxLength &&
@@ -219,7 +231,7 @@ export default {
       //     })
       //   );
       return errors;
-    }
-  }
+    },
+  },
 };
 </script>
