@@ -28,7 +28,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.css
 // Import image preview and file type validation plugins
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import { url } from "../../plugins/enviroment_vars";
+import { url } from "../../env_files/var";
 import { mapGetters } from "vuex";
 // Create component
 const FilePond = vueFilePond(
