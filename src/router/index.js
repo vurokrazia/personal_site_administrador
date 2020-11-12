@@ -22,6 +22,8 @@ import New_Category from '../components/categories/new'
 import Edit_Category from '../components/categories/edit'
 import Show_Category from '../components/categories/show'
 
+import Social_View from '../components/social/index'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -32,6 +34,14 @@ const routes = [
     meta: {
       title: "Welcome"
     }
+  },
+  {
+    path: name_routes.home.red.path,
+    name: name_routes.home.red.name,
+    component: Social_View,
+    meta: {
+      title: name_routes.home.red.title
+    },
   },
   {
     path: name_routes.users.path,
@@ -187,7 +197,7 @@ const beforeEnterValidatePermissions = (to, from, next) => {
 
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
-
+  console.log(name_routes.home);
   if (document.title == name_routes.articles.show.title)
     document.title = store.getters['articleModule/article'].title
   else if (document.title == name_routes.categories.show.title)

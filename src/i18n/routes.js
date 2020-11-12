@@ -11,6 +11,11 @@ export default {
       title: "Sobre mi",
       path: "/me",
       name:"meAuth"
+    },
+    red:{
+      title:"Redes Sociales",
+      path: "/redes",
+      name:"red_media"
     }
   },
   users: {

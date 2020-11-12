@@ -118,6 +118,10 @@ export default {
           to: this.$t("path.home.root.path")
         },
         {
+          title: this.$t("path.home.red.title"),
+          to: this.$t("path.home.red.path")
+        },
+        {
           title: this.$t("path.articles.title"),
           to: { name: this.$t("path.articles.index.name") },
           icon: this.$t("path.articles.index.icon")

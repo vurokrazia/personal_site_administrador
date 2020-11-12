@@ -10,7 +10,7 @@ export default {
     me: {
       title: "Sobre mi",
       path: "/me",
-      name:"meAuth"
+      name: "meAuth"
     }
   },
   users: {
