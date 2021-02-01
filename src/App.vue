@@ -33,7 +33,6 @@ export default {
   },
   mounted() {
     this.findStorage();
-    console.log(process.env);
   },
   watch: {
     createAlert() {

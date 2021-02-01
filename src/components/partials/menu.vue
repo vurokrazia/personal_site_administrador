@@ -201,7 +201,7 @@ export default {
       this.items = [];
       this.admins = [];
       if (this.logged) this.items = this.items.concat(this.visit_list);
-      else this.items = this.items.concat(this.auth_list);
+      //else this.items = this.items.concat(this.auth_list);
       if (this.is_administrator) this.admins = this.admin_list;
     },
     checkNameRoute(root) {
