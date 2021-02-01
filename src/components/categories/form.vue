@@ -15,6 +15,7 @@
         <input type="file" @change="onPictureSelected" />
 
         <v-text-field
+          type="color"
           class="capitalize"
           v-model="resource.color"
           :label="$t('inputs.color')"

@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <navigation></navigation>
-    <v-content style="padding: 53px 0px 0px; ">
+    <v-content style="padding: 53px 0px 0px">
       <display-message v-if="message.show" />
       <router-view></router-view>
     </v-content>
@@ -18,21 +18,22 @@ export default {
   mixins: [mixins],
   components: {
     navigation,
-    DisplayMessage
+    DisplayMessage,
   },
   data() {
     return {
-      theme: false
+      theme: false,
     };
   },
   computed: {
     ...mapState("appModule", ["message"]),
     createAlert() {
       return this.$store.state.alert.message;
-    }
+    },
   },
   mounted() {
     this.findStorage();
+    console.log(process.env);
   },
   watch: {
     createAlert() {
@@ -42,7 +43,7 @@ export default {
           title: this.$store.state.alert.message,
           showConfirmButton: false,
           timer: this.$store.state.alert.timeout,
-          toast: this.$store.state.alert.toast
+          toast: this.$store.state.alert.toast,
           // , imageUrl:
           //   "https://as.com/meristation/imagenes/2020/01/07/header_image/130019411578411635.jpg",
           // imageWidth: 400,
@@ -55,12 +56,12 @@ export default {
             type: this.$store.state.alert.type,
             message: "",
             timeout: 1000,
-            toast: false
+            toast: false,
           });
         }, this.$store.state.alert.timeout + 500);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style >
@@ -123,15 +124,15 @@ export default {
     transform: translate(1px, -2px) rotate(-1deg);
   }
 }
- .border-botom {
-    /* background-color: red; */
-    height: 1px;
-    border: none !important;
-    padding-top: 5px ;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    border-bottom: 1.8px solid #e0e0e083 !important;
-  }
+.border-botom {
+  /* background-color: red; */
+  height: 1px;
+  border: none !important;
+  padding-top: 5px;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  border-bottom: 1.8px solid #e0e0e083 !important;
+}
 .transparent-black {
   background-color: rgba(13, 3, 0, 0.55);
 }

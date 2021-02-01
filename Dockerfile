@@ -22,6 +22,6 @@ COPY . .
 RUN npm run build
 
 EXPOSE 8080
-#CMD [ "http-server", "dist" ]
-RUN printenv > .env
-CMD [ "npm", "run" ,"serve" ]
+CMD [ "http-server", "dist" ]
+#RUN printenv > .env
+#CMD [ "npm", "run" ,"serve" ]

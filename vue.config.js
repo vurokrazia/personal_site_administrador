@@ -1,3 +1,5 @@
+const Dotenv = require('dotenv-webpack');
+
 module.exports = {
   "transpileDependencies": [
     "vuetify"
@@ -6,5 +8,10 @@ module.exports = {
     workboxOptions: {
       skipWaiting: true
     }
+  },
+  configureWebpack: {
+    plugins: [
+      new Dotenv()
+    ]
   }
 }

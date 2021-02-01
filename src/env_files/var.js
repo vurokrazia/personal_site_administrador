@@ -1,6 +1,9 @@
-const dotenv = require('dotenv').config( {path: `./../../.env.${process.env.NODE_ENV}`} )
 export const mode = process.env.NODE_ENV === 'production'
-export const user_key = mode ? "user" : "development_user";
-export const logged_key = mode ? "logged" : "development_logged";
-export const token_key = mode ? "token" : "development_token";
-export const url = mode ? "https://vk.vurokrazia.com/api/v1" : "http://localhost:3006/api/v1";
+export const user_key = process.env.VUE_APP_USER_KEY
+export const logged_key = process.env.VUE_APP_LOGGED_KEY
+export const token_key = process.env.VUE_APP_TOKEN_KEY
+export const url = process.env.VUE_APP_URL_BLOG
+
+
+
+
