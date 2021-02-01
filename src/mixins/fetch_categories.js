@@ -55,7 +55,7 @@ export default {
             console.log(result.status);
             switch (result.status) {
               case 200:
-                resolve(result.data)
+                resolve(result.data.articles)
                 break;
               case 204:
                 this.$swal.fire({
