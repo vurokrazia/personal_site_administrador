@@ -1,4 +1,4 @@
-FROM node:9.11.1-alpine
+FROM node:15.11.0-alpine3.10
 
 # To handle 'not get uid/gid'
 RUN npm config set unsafe-perm true
@@ -12,6 +12,7 @@ WORKDIR /app
 # copiar 'package.json' y 'package-lock.json' (si están disponibles)
 COPY package*.json ./
 
+RUN npm i npm@latest -g
 # instalar dependencias del proyecto
 RUN npm install
 
